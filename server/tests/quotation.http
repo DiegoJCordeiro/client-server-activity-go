@@ -1,0 +1,3 @@
+### GET - Get Quotation About USDBRL
+GET http://localhost:8080/quotation HTTP/1.1
+###
