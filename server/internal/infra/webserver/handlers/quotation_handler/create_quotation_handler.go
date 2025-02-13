@@ -12,12 +12,14 @@ import (
 type CreateQuotationHandler struct {
 	Repository repository.IQuotationRepository
 	UseCase    quotation_usecase.IQuotationUseCase
+	Formatter  formatter.IFormatter
 }
 
-func NewCreateQuotationHandler(repository repository.IQuotationRepository, useCase quotation_usecase.IQuotationUseCase) *CreateQuotationHandler {
+func NewCreateQuotationHandler(repository repository.IQuotationRepository, useCase quotation_usecase.IQuotationUseCase, formatter formatter.IFormatter) *CreateQuotationHandler {
 	return &CreateQuotationHandler{
 		Repository: repository,
 		UseCase:    useCase,
+		Formatter:  formatter,
 	}
 }
 
@@ -33,7 +35,7 @@ func (handler *CreateQuotationHandler) Handler(response http.ResponseWriter, req
 			Code:    http.StatusBadRequest,
 			Message: err.Error(),
 		}
-		_ = formatter.EncodeObjectToJson(errDto, response)
+		_ = handler.Formatter.EncodeObjectToJson(errDto, response)
 		return
 	}
 
@@ -45,7 +47,7 @@ func (handler *CreateQuotationHandler) Handler(response http.ResponseWriter, req
 			Code:    http.StatusInternalServerError,
 			Message: err.Error(),
 		}
-		_ = formatter.EncodeObjectToJson(errDto, response)
+		_ = handler.Formatter.EncodeObjectToJson(errDto, response)
 		return
 	}
 

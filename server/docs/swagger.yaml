@@ -1,0 +1,16 @@
+basePath: /
+host: localhost:8081
+info:
+  contact:
+    email: diegocordeiro.contatos@gmail.com
+    name: Diego Cordeiro
+    url: https://github.com/DiegoJCordeiro/client-server-activity-go
+  description: API to query USD current value
+  license:
+    name: Diego Cordeiro License
+    url: https://github.com/DiegoJCordeiro/client-server-activity-go/blob/main/LICENSE
+  termsOfService: http://swagger.io/terms/
+  title: Server - GO Expert - Activity
+  version: "1.0"
+paths: {}
+swagger: "2.0"

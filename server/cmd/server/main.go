@@ -2,14 +2,31 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/cfg"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/webserver/handlers"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/swaggo/http-swagger"
+	_ "github.com/swaggo/http-swagger/example/go-chi/docs"
 	"log"
 	"net/http"
 	"time"
 )
 
+// @title Server - GO Expert - Activity
+// @version 1.0
+// @description API to query USD current value
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Diego Cordeiro
+// @contact.url https://github.com/DiegoJCordeiro/client-server-activity-go
+// @contact.email diegocordeiro.contatos@gmail.com
+
+// @license.name Diego Cordeiro License
+// @license.url  https://github.com/DiegoJCordeiro/client-server-activity-go/blob/main/LICENSE
+
+// @host localhost:8081
+// @BasePath /
 func main() {
 
 	var db *sql.DB
@@ -28,7 +45,7 @@ func main() {
 		Timeout: time.Second * 2,
 	}
 
-	server := handlers.NewWebServer(":8080")
+	server := handlers.NewWebServer(fmt.Sprintf(":%s", configuration.WebserverPort))
 
 	configureHandlersOnWebServer(server, &httpClient, db)
 
@@ -45,6 +62,10 @@ func configureHandlersOnWebServer(server *handlers.WebServer, httpClient *http.C
 	updateQuotationHandler := NewUpdateQuotationHandler(db)
 	createQuotationHandler := NewCreateQuotationHandler(db)
 	deleteQuotationHandler := NewDeleteQuotationHandler(db)
+
+	server.AddHandler("GET /swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/swagger/doc.json"),
+	))
 
 	server.AddHandler("GET /quotation", queryQuotationHandler.Handler)
 	server.AddHandler("PUT /quotation", updateQuotationHandler.Handler)

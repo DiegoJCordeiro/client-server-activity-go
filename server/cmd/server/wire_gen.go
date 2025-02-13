@@ -8,6 +8,7 @@ package main
 
 import (
 	"database/sql"
+	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/formatter"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/clients"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/database/repository"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/webserver/handlers/quotation_handler"
@@ -18,6 +19,8 @@ import (
 
 import (
 	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/swaggo/http-swagger/example/go-chi/docs"
+	_ "github.com/swaggo/http-swagger/v2"
 )
 
 // Injectors from wire.go:
@@ -33,28 +36,32 @@ func NewQueryQuotationHandler(db *sql.DB, client *http.Client) *quotation_handle
 	quotationRepositoryImpl := repository.NewQuotationRepositoryImpl(db)
 	quotationClient := clients.NewQuotationClient(client)
 	queryQuotationUseCase := quotation_usecase.NewQueryQuotationUseCase(quotationRepositoryImpl, quotationClient)
-	queryAllQuotationsHandler := quotation_handler.NewQueryAllQuotationsHandler(quotationRepositoryImpl, queryQuotationUseCase)
+	formatterFormatter := formatter.NewFormatter()
+	queryAllQuotationsHandler := quotation_handler.NewQueryAllQuotationsHandler(quotationRepositoryImpl, queryQuotationUseCase, formatterFormatter)
 	return queryAllQuotationsHandler
 }
 
 func NewCreateQuotationHandler(db *sql.DB) *quotation_handler.CreateQuotationHandler {
 	quotationRepositoryImpl := repository.NewQuotationRepositoryImpl(db)
 	createQuotationUseCase := quotation_usecase.NewCreateQuotationUseCase(quotationRepositoryImpl)
-	createQuotationHandler := quotation_handler.NewCreateQuotationHandler(quotationRepositoryImpl, createQuotationUseCase)
+	formatterFormatter := formatter.NewFormatter()
+	createQuotationHandler := quotation_handler.NewCreateQuotationHandler(quotationRepositoryImpl, createQuotationUseCase, formatterFormatter)
 	return createQuotationHandler
 }
 
 func NewDeleteQuotationHandler(db *sql.DB) *quotation_handler.DeleteQuotationHandler {
 	quotationRepositoryImpl := repository.NewQuotationRepositoryImpl(db)
 	deleteQuotationUseCase := quotation_usecase.NewDeleteQuotationUseCase(quotationRepositoryImpl)
-	deleteQuotationHandler := quotation_handler.NewDeleteQuotationsHandler(quotationRepositoryImpl, deleteQuotationUseCase)
+	formatterFormatter := formatter.NewFormatter()
+	deleteQuotationHandler := quotation_handler.NewDeleteQuotationsHandler(quotationRepositoryImpl, deleteQuotationUseCase, formatterFormatter)
 	return deleteQuotationHandler
 }
 
 func NewUpdateQuotationHandler(db *sql.DB) *quotation_handler.UpdateQuotationHandler {
 	quotationRepositoryImpl := repository.NewQuotationRepositoryImpl(db)
 	updateQuotationUseCase := quotation_usecase.NewUpdateQuotationUseCase(quotationRepositoryImpl)
-	updateQuotationHandler := quotation_handler.NewUpdateQuotationsHandler(quotationRepositoryImpl, updateQuotationUseCase)
+	formatterFormatter := formatter.NewFormatter()
+	updateQuotationHandler := quotation_handler.NewUpdateQuotationsHandler(quotationRepositoryImpl, updateQuotationUseCase, formatterFormatter)
 	return updateQuotationHandler
 }
 
@@ -71,3 +78,5 @@ var setQuotationUpdateUseCaseDependency = wire.NewSet(quotation_usecase.NewUpdat
 var setQuotationDeleteUseCaseDependency = wire.NewSet(quotation_usecase.NewDeleteQuotationUseCase, wire.Bind(new(quotation_usecase.IQuotationUseCase), new(*quotation_usecase.DeleteQuotationUseCase)))
 
 var setCreateQuotationUseCaseDependency = wire.NewSet(quotation_usecase.NewCreateQuotationUseCase, wire.Bind(new(quotation_usecase.IQuotationUseCase), new(*quotation_usecase.CreateQuotationUseCase)))
+
+var setFormatterDependency = wire.NewSet(formatter.NewFormatter, wire.Bind(new(formatter.IFormatter), new(*formatter.Formatter)))

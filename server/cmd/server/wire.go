@@ -7,6 +7,7 @@ package main
 
 import (
 	"database/sql"
+	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/formatter"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/clients"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/database/repository"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/webserver/handlers/quotation_handler"
@@ -45,6 +46,11 @@ var setCreateQuotationUseCaseDependency = wire.NewSet(
 	wire.Bind(new(quotation_usecase.IQuotationUseCase), new(*quotation_usecase.CreateQuotationUseCase)),
 )
 
+var setFormatterDependency = wire.NewSet(
+	formatter.NewFormatter,
+	wire.Bind(new(formatter.IFormatter), new(*formatter.Formatter)),
+)
+
 func NewQueryQuotationUseCase(db *sql.DB, client *http.Client) *quotation_usecase.QueryQuotationUseCase {
 
 	wire.Build(
@@ -62,6 +68,7 @@ func NewQueryQuotationHandler(db *sql.DB, client *http.Client) *quotation_handle
 		setQuotationRepositoryDependency,
 		setQuotationClientDependency,
 		setQuotationQueryUseCaseDependency,
+		setFormatterDependency,
 		quotation_handler.NewQueryAllQuotationsHandler,
 	)
 
@@ -73,6 +80,7 @@ func NewCreateQuotationHandler(db *sql.DB) *quotation_handler.CreateQuotationHan
 	wire.Build(
 		setQuotationRepositoryDependency,
 		setCreateQuotationUseCaseDependency,
+		setFormatterDependency,
 		quotation_handler.NewCreateQuotationHandler,
 	)
 
@@ -84,6 +92,7 @@ func NewDeleteQuotationHandler(db *sql.DB) *quotation_handler.DeleteQuotationHan
 	wire.Build(
 		setQuotationRepositoryDependency,
 		setQuotationDeleteUseCaseDependency,
+		setFormatterDependency,
 		quotation_handler.NewDeleteQuotationsHandler,
 	)
 
@@ -95,6 +104,7 @@ func NewUpdateQuotationHandler(db *sql.DB) *quotation_handler.UpdateQuotationHan
 	wire.Build(
 		setQuotationRepositoryDependency,
 		setQuotationUpdateUseCaseDependency,
+		setFormatterDependency,
 		quotation_handler.NewUpdateQuotationsHandler,
 	)
 
