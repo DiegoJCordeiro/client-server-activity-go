@@ -26,7 +26,7 @@ func NewQuotationRepositoryImpl(db *sql.DB) *QuotationRepositoryImpl {
 	return &quotationRepository
 }
 
-func (quotation *QuotationRepositoryImpl) Create(quotationDTO dto.QuotationInputDTO) (entity.Quotation, error) {
+func (quotation *QuotationRepositoryImpl) Create(quotationDTO dto.QuotationInputRepositoryDTO) (entity.Quotation, error) {
 
 	id := uuid.New()
 	ctx := context.Background()
@@ -55,7 +55,7 @@ func (quotation *QuotationRepositoryImpl) Create(quotationDTO dto.QuotationInput
 	}, nil
 }
 
-func (quotation *QuotationRepositoryImpl) Update(quotationDTO dto.QuotationInputDTO) (entity.Quotation, error) {
+func (quotation *QuotationRepositoryImpl) Update(quotationDTO dto.QuotationInputRepositoryDTO) (entity.Quotation, error) {
 
 	ctx := context.Background()
 	updateDate := time.Now()
@@ -100,7 +100,9 @@ func (quotation *QuotationRepositoryImpl) Delete(id string) (entity.Quotation, e
 		return entity.Quotation{}, errors.New("error to delete data")
 	}
 
-	return entity.Quotation{}, nil
+	quotationFound, _ := quotation.QueryByID(id)
+
+	return quotationFound, nil
 }
 
 func (quotation *QuotationRepositoryImpl) QueryAll() ([]entity.Quotation, error) {

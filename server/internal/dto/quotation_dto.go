@@ -24,11 +24,11 @@ type CurrencyDTO struct {
 	CreateDate time.Time `json:"create_date"`
 }
 
-type QuotationClientResponse struct {
-	Currency CurrencyClientResponse `json:"USDBRL"`
+type QuotationClientOutput struct {
+	Currency CurrencyClientOutput `json:"USDBRL"`
 }
 
-type CurrencyClientResponse struct {
+type CurrencyClientOutput struct {
 	Code       string `json:"code"`
 	CodeIn     string `json:"codein"`
 	Name       string `json:"name"`
@@ -42,7 +42,17 @@ type CurrencyClientResponse struct {
 	CreateDate string `json:"create_date"`
 }
 
-type QuotationInputDTO struct {
+type QuotationInputHandlerCreateDTO struct {
+	ID  string `json:"id"`
+	Bid string `json:"bid"`
+	Ask string `json:"ask"`
+}
+
+type QuotationInputHandlerUpdateDTO struct {
+	*QuotationInputHandlerCreateDTO
+}
+
+type QuotationInputUseCaseDTO struct {
 	ID        string `json:"id"`
 	Bid       string `json:"bid"`
 	Ask       string `json:"ask"`
@@ -56,7 +66,18 @@ type QuotationInputDTO struct {
 	Timestamp string `json:"timestamp"`
 }
 
-type QuotationOutputDTO struct {
+type QuotationInputRepositoryDTO struct {
+	ID        string    `json:"id"`
+	Bid       string    `json:"bid"`
+	Ask       string    `json:"ask"`
+	Code      string    `json:"code"`
+	Timestamp string    `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
+	DeletedAt time.Time `json:"deletedAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+type QuotationOutputUseCaseDTO struct {
 	ID        string    `json:"id"`
 	Bid       string    `json:"bid"`
 	Ask       string    `json:"ask"`
@@ -69,7 +90,7 @@ func (quotation *QuotationDTO) UnmarshalJSON(data []byte) error {
 
 	const layout = "2006-01-02 15:04:05"
 
-	var quotationClientResponse = new(QuotationClientResponse)
+	var quotationClientResponse = new(QuotationClientOutput)
 
 	if err := json.Unmarshal(data, quotationClientResponse); err != nil {
 		return err
@@ -91,6 +112,33 @@ func (quotation *QuotationDTO) UnmarshalJSON(data []byte) error {
 
 	if err != nil {
 		return fmt.Errorf("falha ao parsear CreateDate: %v", err)
+	}
+
+	return nil
+}
+
+func (quotation *QuotationInputUseCaseDTO) UnmarshalJSON(data []byte) error {
+
+	var quotationClientResponse = new(QuotationClientOutput)
+
+	if err := json.Unmarshal(data, quotationClientResponse); err != nil {
+		return err
+	}
+
+	if quotationClientResponse.Currency.Code != "" {
+
+		quotation.Code = quotationClientResponse.Currency.Code
+		quotation.CodeIn = quotationClientResponse.Currency.CodeIn
+		quotation.Name = quotationClientResponse.Currency.Name
+		quotation.High = quotationClientResponse.Currency.High
+		quotation.Low = quotationClientResponse.Currency.Low
+		quotation.VarBid = quotationClientResponse.Currency.VarBid
+		quotation.PctChange = quotationClientResponse.Currency.PctChange
+		quotation.Bid = quotationClientResponse.Currency.Bid
+		quotation.Ask = quotationClientResponse.Currency.Ask
+		quotation.Timestamp = quotationClientResponse.Currency.Timestamp
+
+		return nil
 	}
 
 	return nil

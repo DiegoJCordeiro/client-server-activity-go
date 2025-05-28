@@ -23,7 +23,201 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/quotation": {
+            "get": {
+                "description": "This endpoint is used to Query a quotation.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quotation"
+                ],
+                "summary": "Query a quotation",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuotationOutputUseCaseDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorDTO"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "This endpoint is used to Update a quotation.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quotation"
+                ],
+                "summary": "Update a quotation",
+                "parameters": [
+                    {
+                        "description": "Quotation Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuotationInputHandlerUpdateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuotationOutputUseCaseDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorDTO"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "This endpoint is used to Query a quotation.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quotation"
+                ],
+                "summary": "Create a quotation",
+                "parameters": [
+                    {
+                        "description": "Quotation Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuotationInputHandlerCreateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuotationOutputUseCaseDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorDTO"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "This endpoint is used to Delete a quotation.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quotation"
+                ],
+                "summary": "Delete a quotation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id quotation",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.QuotationOutputUseCaseDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorDTO"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.ErrorDTO": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.QuotationInputHandlerCreateDTO": {
+            "type": "object",
+            "properties": {
+                "ask": {
+                    "type": "string"
+                },
+                "bid": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.QuotationInputHandlerUpdateDTO": {
+            "type": "object",
+            "properties": {
+                "ask": {
+                    "type": "string"
+                },
+                "bid": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.QuotationOutputUseCaseDTO": {
+            "type": "object",
+            "properties": {
+                "ask": {
+                    "type": "string"
+                },
+                "bid": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

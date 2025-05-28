@@ -24,11 +24,23 @@ func NewUpdateQuotationsHandler(repository repository.IQuotationRepository, useC
 	}
 }
 
-func (handler *UpdateQuotationHandler) Handler(response http.ResponseWriter, request *http.Request) {
+// UpdateHandler Update a quotation godoc
+//
+// @Summary     Update a quotation
+// @Description This endpoint is used to Update a quotation.
+// @Tags        Quotation
+// @Accept      json
+// @Produces    json
+// @Param       request      body   	dto.QuotationInputHandlerUpdateDTO      true      "Quotation Request"
+// @Success     204 {object} dto.QuotationOutputUseCaseDTO
+// @Failure     500         {object}      dto.ErrorDTO
+// @Router      /quotation  [put]
+func (handler *UpdateQuotationHandler) UpdateHandler(response http.ResponseWriter, request *http.Request) {
 
 	var errDto dto.ErrorDTO
-	var input dto.QuotationInputDTO
-	var quotationUpdated dto.QuotationOutputDTO
+	var input dto.QuotationInputHandlerUpdateDTO
+	var inputUseCase dto.QuotationInputUseCaseDTO
+	var quotationUpdated dto.QuotationOutputUseCaseDTO
 
 	if err := json.NewDecoder(request.Body).Decode(&input); err != nil {
 		response.WriteHeader(http.StatusBadRequest)
@@ -40,7 +52,13 @@ func (handler *UpdateQuotationHandler) Handler(response http.ResponseWriter, req
 		return
 	}
 
-	quotationUpdated, err := handler.UseCase.Execute(input)
+	inputUseCase = dto.QuotationInputUseCaseDTO{
+		ID:  input.ID,
+		Bid: input.Bid,
+		Ask: input.Ask,
+	}
+
+	quotationUpdated, err := handler.UseCase.Execute(inputUseCase)
 
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
@@ -52,6 +70,7 @@ func (handler *UpdateQuotationHandler) Handler(response http.ResponseWriter, req
 		return
 	}
 
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	response.WriteHeader(http.StatusNoContent)
 	_ = handler.Formatter.EncodeObjectToJson(quotationUpdated, response)
 }

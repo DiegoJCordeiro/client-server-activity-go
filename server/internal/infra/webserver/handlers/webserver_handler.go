@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	_ "github.com/DiegoJCordeiro/golang-study/activity/server/docs"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
 )
 
@@ -27,6 +29,9 @@ func (webServer *WebServer) AddHandler(path string, handler http.HandlerFunc) {
 func (webServer *WebServer) Start() error {
 
 	webServer.Router.Use(middleware.Logger)
+	webServer.Router.Get("/docs/*", httpSwagger.Handler(
+		httpSwagger.URL("docs/doc.json"),
+	))
 
 	for path, handler := range webServer.Handlers {
 		webServer.Router.Handle(path, handler)

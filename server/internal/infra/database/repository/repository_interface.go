@@ -6,8 +6,8 @@ import (
 )
 
 type IQuotationRepository interface {
-	Create(dto.QuotationInputDTO) (entity.Quotation, error)
-	Update(dto.QuotationInputDTO) (entity.Quotation, error)
+	Create(quotationDTO dto.QuotationInputRepositoryDTO) (entity.Quotation, error)
+	Update(quotationDTO dto.QuotationInputRepositoryDTO) (entity.Quotation, error)
 	Delete(id string) (entity.Quotation, error)
 	QueryAll() ([]entity.Quotation, error)
 	QueryByID(id string) (entity.Quotation, error)

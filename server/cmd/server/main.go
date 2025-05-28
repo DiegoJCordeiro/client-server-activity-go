@@ -6,8 +6,6 @@ import (
 	"github.com/DiegoJCordeiro/golang-study/activity/server/cfg"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/webserver/handlers"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/swaggo/http-swagger"
-	_ "github.com/swaggo/http-swagger/example/go-chi/docs"
 	"log"
 	"net/http"
 	"time"
@@ -63,12 +61,8 @@ func configureHandlersOnWebServer(server *handlers.WebServer, httpClient *http.C
 	createQuotationHandler := NewCreateQuotationHandler(db)
 	deleteQuotationHandler := NewDeleteQuotationHandler(db)
 
-	server.AddHandler("GET /swagger/*", httpSwagger.Handler(
-		httpSwagger.URL("/swagger/doc.json"),
-	))
-
-	server.AddHandler("GET /quotation", queryQuotationHandler.Handler)
-	server.AddHandler("PUT /quotation", updateQuotationHandler.Handler)
-	server.AddHandler("POST /quotation", createQuotationHandler.Handler)
-	server.AddHandler("DELETE /quotation", deleteQuotationHandler.Handler)
+	server.AddHandler("GET /quotation", queryQuotationHandler.QueryHandler)
+	server.AddHandler("PUT /quotation", updateQuotationHandler.UpdateHandler)
+	server.AddHandler("POST /quotation", createQuotationHandler.CreateHandler)
+	server.AddHandler("DELETE /quotation", deleteQuotationHandler.DeleteHandler)
 }

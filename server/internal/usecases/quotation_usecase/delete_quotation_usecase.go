@@ -15,15 +15,15 @@ func NewDeleteQuotationUseCase(repository repository.IQuotationRepository) *Dele
 	}
 }
 
-func (quotationUseCase *DeleteQuotationUseCase) Execute(inputDto dto.QuotationInputDTO) (dto.QuotationOutputDTO, error) {
+func (quotationUseCase *DeleteQuotationUseCase) Execute(inputDto dto.QuotationInputUseCaseDTO) (dto.QuotationOutputUseCaseDTO, error) {
 
 	quotationDeleted, err := quotationUseCase.Repository.Delete(inputDto.ID)
 
 	if err != nil {
-		return dto.QuotationOutputDTO{}, err
+		return dto.QuotationOutputUseCaseDTO{}, err
 	}
 
-	return dto.QuotationOutputDTO{
+	return dto.QuotationOutputUseCaseDTO{
 		ID:        quotationDeleted.ID.String(),
 		Bid:       quotationDeleted.Bid,
 		Ask:       quotationDeleted.Ask,

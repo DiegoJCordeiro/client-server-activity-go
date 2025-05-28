@@ -1,4 +1,4 @@
-basePath: /
+basePath: /v2
 definitions:
   dto.ErrorDTO:
     properties:
@@ -7,25 +7,32 @@ definitions:
       statusCode:
         type: integer
     type: object
-  dto.QuotationInputHandlerCreateDTO:
+  dto.QuotationInputDTO:
     properties:
       ask:
         type: string
       bid:
         type: string
-      id:
+      code:
         type: string
-    type: object
-  dto.QuotationInputHandlerUpdateDTO:
-    properties:
-      ask:
+      codein:
         type: string
-      bid:
+      high:
         type: string
       id:
         type: string
+      low:
+        type: string
+      name:
+        type: string
+      pctChange:
+        type: string
+      timestamp:
+        type: string
+      varBid:
+        type: string
     type: object
-  dto.QuotationOutputUseCaseDTO:
+  dto.QuotationOutputDTO:
     properties:
       ask:
         type: string
@@ -60,16 +67,17 @@ paths:
       - application/json
       description: This endpoint is used to Delete a quotation.
       parameters:
-      - description: id quotation
-        in: query
-        name: id
+      - description: Quotation Request
+        in: body
+        name: request
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/dto.QuotationInputDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.QuotationOutputUseCaseDTO'
+            $ref: '#/definitions/dto.QuotationOutputDTO'
         "500":
           description: Internal Server Error
           schema:
@@ -85,7 +93,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.QuotationOutputUseCaseDTO'
+            $ref: '#/definitions/dto.QuotationOutputDTO'
         "500":
           description: Internal Server Error
           schema:
@@ -103,12 +111,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.QuotationInputHandlerCreateDTO'
+          $ref: '#/definitions/dto.QuotationInputDTO'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.QuotationOutputUseCaseDTO'
+            $ref: '#/definitions/dto.QuotationOutputDTO'
         "500":
           description: Internal Server Error
           schema:
@@ -126,12 +134,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.QuotationInputHandlerUpdateDTO'
+          $ref: '#/definitions/dto.QuotationInputDTO'
       responses:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/dto.QuotationOutputUseCaseDTO'
+            $ref: '#/definitions/dto.QuotationOutputDTO'
         "500":
           description: Internal Server Error
           schema:

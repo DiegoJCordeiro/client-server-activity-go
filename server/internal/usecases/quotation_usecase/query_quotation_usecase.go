@@ -1,10 +1,12 @@
 package quotation_usecase
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/dto"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/clients"
 	"github.com/DiegoJCordeiro/golang-study/activity/server/internal/infra/database/repository"
+	"time"
 )
 
 type QueryQuotationUseCase struct {
@@ -19,31 +21,43 @@ func NewQueryQuotationUseCase(repository repository.IQuotationRepository, client
 	}
 }
 
-func (quotationUseCase *QueryQuotationUseCase) Execute(dto.QuotationInputDTO) (dto.QuotationOutputDTO, error) {
+func (quotationUseCase *QueryQuotationUseCase) Execute(dto.QuotationInputUseCaseDTO) (dto.QuotationOutputUseCaseDTO, error) {
+
+	var quotationInputUseCaseDTO dto.QuotationInputUseCaseDTO
+	var quotationInputRepositoryDTO dto.QuotationInputRepositoryDTO
 
 	resp, err := quotationUseCase.Client.Call("GET", "https://economia.awesomeapi.com.br/json/last/USD-BRL", nil)
 
 	if err != nil {
-		return dto.QuotationOutputDTO{}, err
+		return dto.QuotationOutputUseCaseDTO{}, err
 	}
 
-	if quotationDTO, ok := resp.(dto.QuotationInputDTO); ok {
+	responseToJson, _ := json.Marshal(resp)
 
-		quotationCreated, errUseCase := quotationUseCase.Repository.Create(quotationDTO)
+	if err := json.Unmarshal(responseToJson, &quotationInputUseCaseDTO); err == nil {
 
-		if errUseCase != nil {
-			return dto.QuotationOutputDTO{}, errUseCase
+		quotationInputRepositoryDTO = dto.QuotationInputRepositoryDTO{
+			Bid:       quotationInputUseCaseDTO.Bid,
+			Ask:       quotationInputUseCaseDTO.Ask,
+			Code:      quotationInputUseCaseDTO.Code,
+			Timestamp: quotationInputUseCaseDTO.Timestamp,
 		}
 
-		return dto.QuotationOutputDTO{
+		quotationCreated, errUseCase := quotationUseCase.Repository.Create(quotationInputRepositoryDTO)
+
+		if errUseCase != nil {
+			return dto.QuotationOutputUseCaseDTO{}, errUseCase
+		}
+
+		return dto.QuotationOutputUseCaseDTO{
 			ID:        quotationCreated.ID.String(),
 			Bid:       quotationCreated.Bid,
 			Ask:       quotationCreated.Ask,
 			CreatedAt: quotationCreated.CreatedAt,
-			UpdatedAt: quotationCreated.UpdatedAt,
-			DeletedAt: quotationCreated.DeletedAt,
+			UpdatedAt: time.Time{},
+			DeletedAt: time.Time{},
 		}, nil
 	} else {
-		return dto.QuotationOutputDTO{}, errors.New("error to convert response")
+		return dto.QuotationOutputUseCaseDTO{}, errors.New("error to convert response")
 	}
 }

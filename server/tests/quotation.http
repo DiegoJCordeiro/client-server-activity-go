@@ -1,3 +1,32 @@
 ### GET - Get Quotation About USDBRL
-GET http://localhost:8080/quotation HTTP/1.1
+GET http://localhost:8081/quotation HTTP/1.1
+###
+
+### POST - Create new Quotation.
+POST http://localhost:8081/quotation HTTP/1.1
+Content-Type: application/json
+
+{
+  "ask": "5.7294",
+  "bid": "5.7394"
+}
+
+###
+
+### PUT - Update new Quotation.
+PUT http://localhost:8081/quotation HTTP/1.1
+Content-Type: application/json
+
+{
+  "ask": "5.7294",
+  "bid": "5.7394",
+  "id": "a41cfdb0-1753-4504-a2f7-02c0502fdf56"
+}
+
+###
+
+### DELETE - Update new Quotation.
+DELETE http://localhost:8081/quotation?id=a41cfdb0-1753-4504-a2f7-02c0502fdf56 HTTP/1.1
+Content-Type: application/json
+
 ###

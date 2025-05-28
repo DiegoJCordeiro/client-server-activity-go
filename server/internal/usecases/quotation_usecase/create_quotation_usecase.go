@@ -15,15 +15,23 @@ func NewCreateQuotationUseCase(repository repository.IQuotationRepository) *Crea
 	}
 }
 
-func (quotationUseCase *CreateQuotationUseCase) Execute(input dto.QuotationInputDTO) (dto.QuotationOutputDTO, error) {
+func (quotationUseCase *CreateQuotationUseCase) Execute(inputUseCase dto.QuotationInputUseCaseDTO) (dto.QuotationOutputUseCaseDTO, error) {
 
-	quotationCreated, err := quotationUseCase.Repository.Create(input)
-
-	if err != nil {
-		return dto.QuotationOutputDTO{}, err
+	var inputRepository = dto.QuotationInputRepositoryDTO{
+		ID:        inputUseCase.ID,
+		Bid:       inputUseCase.Bid,
+		Ask:       inputUseCase.Ask,
+		Code:      inputUseCase.Code,
+		Timestamp: inputUseCase.Timestamp,
 	}
 
-	return dto.QuotationOutputDTO{
+	quotationCreated, err := quotationUseCase.Repository.Create(inputRepository)
+
+	if err != nil {
+		return dto.QuotationOutputUseCaseDTO{}, err
+	}
+
+	return dto.QuotationOutputUseCaseDTO{
 		ID:        quotationCreated.ID.String(),
 		Bid:       quotationCreated.Bid,
 		Ask:       quotationCreated.Ask,

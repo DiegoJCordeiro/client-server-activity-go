@@ -19,7 +19,6 @@ import (
 
 import (
 	_ "github.com/mattn/go-sqlite3"
-	_ "github.com/swaggo/http-swagger/example/go-chi/docs"
 	_ "github.com/swaggo/http-swagger/v2"
 )
 

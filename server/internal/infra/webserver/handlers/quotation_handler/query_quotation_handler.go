@@ -22,20 +22,20 @@ func NewQueryAllQuotationsHandler(repository repository.IQuotationRepository, us
 	}
 }
 
-// Handler Query a quotation godoc
+// QueryHandler Query a quotation godoc
 //
 // @Summary     Query a quotation
 // @Description This endpoint is used to Query a quotation.
 // @Tags        Quotation
 // @Accept      json
 // @Produces    json
-// @Success     200 {object} dto.QuotationOutputDTO
-// @Failure     500         {object}      dto.Error
+// @Success     200 {object} dto.QuotationOutputUseCaseDTO
+// @Failure     500         {object}      dto.ErrorDTO
 // @Router      /quotation  [get]
-func (handler *QueryAllQuotationsHandler) Handler(response http.ResponseWriter, request *http.Request) {
+func (handler *QueryAllQuotationsHandler) QueryHandler(response http.ResponseWriter, request *http.Request) {
 
 	var errorDto dto.ErrorDTO
-	quotationDTO, err := handler.UseCase.Execute(dto.QuotationInputDTO{})
+	quotationDTO, err := handler.UseCase.Execute(dto.QuotationInputUseCaseDTO{})
 
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
@@ -47,6 +47,7 @@ func (handler *QueryAllQuotationsHandler) Handler(response http.ResponseWriter, 
 		return
 	}
 
+	response.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	response.WriteHeader(http.StatusOK)
 	_ = handler.Formatter.EncodeObjectToJson(quotationDTO, response)
 }
