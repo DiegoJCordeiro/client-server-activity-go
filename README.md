@@ -16,13 +16,13 @@
 
 <hr>
 
-#### **Descrição**
+#### **📚 Descrição**
 
 *Este repositório é referente a atividade passada na Pós Graduação - Golang Expert pela Instituição Full Cycle - onde temos que entregar um projeto client/server com a Linguagem Go.*
 
 </br>
 
-#### **Objetivos Técnicos**
+#### **🎯 Objetivos Técnicos**
 
 *Seção referente aos desejos técnicos que pretendemos aplicar neste ciclo de estudo.*
 
@@ -34,7 +34,7 @@
 
 </br>
 
-#### **Estrutura**
+#### **📁 Estrutura do Projeto**
 
 *Seção referente as estruturas aplicadas sob o projeto de estudos. Todos os diretórios descritos abaixo, contém arquivos com a extensão .go.*
 
@@ -48,7 +48,7 @@
 
 </br>
 
-#### **Documentações**
+#### **📚 Documentações**
 
 *Seção referente as documentações das tecnologias aplicadas sob o projeto de estudos.*
 
