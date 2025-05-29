@@ -30,7 +30,5 @@ func (service *TextEngineServiceImpl) WriteText(path, text string) error {
 		return err
 	}
 
-	defer service.textEngine.AddTextFile(path, file.Name(), ".txt")
-
 	return nil
 }

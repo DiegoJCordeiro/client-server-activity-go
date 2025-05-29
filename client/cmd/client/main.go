@@ -10,13 +10,19 @@ import (
 
 func main() {
 
-	var textEngineInfra = textengine.NewTextEngine("")
+	var textEngineInfra = textengine.NewTextEngine("./")
+	err := textEngineInfra.AddTextFile("./", "cotacao", "txt")
+
+	if err != nil {
+		panic(err)
+	}
+
 	var textEngineService = services.NewTextEngineServiceImpl(textEngineInfra)
 	var quotationServerClient = output.NewQuotationServerClient()
 	var quotationQueryUseCase = usecases.NewQuotationQueryUseCase(textEngineService, quotationServerClient)
 	var quotationQueryCli = input.NewQuotationQueryCli(quotationQueryUseCase)
 
-	err := quotationQueryCli.Execute()
+	err = quotationQueryCli.Execute()
 
 	if err != nil {
 		panic(err)

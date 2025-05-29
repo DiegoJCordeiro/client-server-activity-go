@@ -12,7 +12,6 @@ type TextEngine struct {
 
 func NewTextEngine(path string) *TextEngine {
 	return &TextEngine{
-		path: path,
 		file: make(map[string]*os.File),
 	}
 }
